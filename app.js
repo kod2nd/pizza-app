@@ -12,22 +12,26 @@ let pizzas = [
 ]
 
 // Get
+app.get("/", (req,res) => {
+    res.json({message: "hello pizzas"})
+})
+
+// Get
 app.get("/pizzas", (req, res) => {
-    res.send(pizzas);
+    res.json(pizzas);
 });
 
 app.get("/pizzas/:id", (req, res) => {
     const selectedPizza = pizzas.find(pizza => {
         return pizza.id === req.params.id
     })
-    console.log(selectedPizza)
-    res.send(selectedPizza)
+    res.json(selectedPizza)
 })
 
 // POST
 app.post('/pizzas', (req, res) => {
     pizzas = [...pizzas, req.body]
-    res.send(req.body)
+    res.json(req.body)
 })
 
 // PUT
@@ -37,7 +41,7 @@ app.put("/pizzas/:id", (req, res) => {
     })
     selectedPizza = { ...selectedPizza, ...req.body }
     pizzas[Number(req.params.id) - 1] = selectedPizza
-    res.send(pizzas)
+    res.json(pizzas)
 })
 
 // Delete
@@ -45,10 +49,16 @@ app.delete("/pizzas/:id", (req, res) => {
     pizzas = pizzas.filter(pizza => {
         return pizza.id !== req.params.id
     })
-    res.send("deleted pizza id: " + req.params.id)
+    // res.json("deleted pizza id: " + req.params.id)
+    res.json(`deleted pizza id: ${req.params.id}`)
 })
 
-const server = app.listen(PORT, () => {
-    console.log("Server has started")
-});
+
+const exportModules = {
+    app: app,
+    PORT: PORT,
+    pizzas: pizzas
+}
+
+module.exports = exportModules
 
